@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <header class="top-bar">
+      <div class="lang-selector">
+        <label for="langSelect" id="langLabel">Language:</label>
+        <select id="langSelect">
+          <option value="en" selected>English</option>
+          <option value="hi">हिंदी (Hindi)</option>
+          <option value="es">Español (Spanish)</option>
+          <option value="fr">Français (French)</option>
+        </select>
+      </div>
+      <button id="geoBtn" title="Current Location">📍</button>
+    </header>
+
+    <div class="search-box">
+      <input type="text" id="cityInput" placeholder="Enter city name..." autocomplete="off" />
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <div id="statusMessage" class="status-message"></div>
+
+    <main id="weatherDisplay" class="weather-display hidden">
+      <h2 id="cityName">--</h2>
+      <div class="temp-container">
+        <img id="weatherIcon" src="" alt="Condition" />
+        <h1 id="temperature">--°C</h1>
+      </div>
+      <p id="description" class="description">--</p>
+
+      <div class="metrics-grid">
+        <div class="metric">
+          <span class="label" id="labelHumidity">Humidity</span>
+          <span class="value" id="humidity">--%</span>
+        </div>
+        <div class="metric">
+          <span class="label" id="labelWind">Wind Speed</span>
+          <span class="value" id="windSpeed">-- m/s</span>
+        </div>
+        <div class="metric">
+          <span class="label" id="labelFeelsLike">Feels Like</span>
+          <span class="value" id="feelsLike">--°C</span>
+        </div>
+        <div class="metric">
+          <span class="label" id="labelPressure">Pressure</span>
+          <span class="value" id="pressure">-- hPa</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
