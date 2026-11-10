@@ -1,6 +1,6 @@
-// OpenWeatherMap se apni valid key yahan daalein:
+//Weather application JS code file
 const API_KEY = "5e3cb83afcb65d108bfa39a77cfefdf6"; 
-let currentCity = "Delhi";
+let currentCity = "Weather";
 
 const translations = {
   en: {
@@ -14,7 +14,8 @@ const translations = {
     notFound: "City not found. Please check spelling.",
     invalidKey: "Invalid API Key. Using offline demo data.",
     loading: "Fetching weather...",
-    geoError: "Location access denied or unavailable."
+    geoError: "Location access denied, unavailable, or timed out.",
+    timeout: "Request timed out. Please try again."
   },
   hi: {
     langLabel: "भाषा:",
@@ -27,7 +28,8 @@ const translations = {
     notFound: "शहर नहीं मिला। कृपया नाम जांचें।",
     invalidKey: "API Key अमान्य है। डेमो डेटा दिखाया जा रहा है।",
     loading: "मौसम विवरण प्राप्त हो रहा है...",
-    geoError: "स्थान अनुमति अस्वीकृत या अनुपलब्ध।"
+    geoError: "स्थान अनुमति अस्वीकृत या अनुपलब्ध।",
+    timeout: "अनुरोध का समय समाप्त हो गया। पुनः प्रयास करें।"
   },
   es: {
     langLabel: "Idioma:",
@@ -40,7 +42,8 @@ const translations = {
     notFound: "Ciudad no encontrada.",
     invalidKey: "Clave API inválida.",
     loading: "Cargando clima...",
-    geoError: "Acceso a la ubicación denegado."
+    geoError: "Acceso a la ubicación denegado.",
+    timeout: "Tiempo de espera agotado."
   },
   fr: {
     langLabel: "Langue:",
@@ -53,7 +56,8 @@ const translations = {
     notFound: "Ville non trouvée.",
     invalidKey: "Clé API non valide.",
     loading: "Chargement...",
-    geoError: "Accès à la localisation refusé."
+    geoError: "Accès à la localisation refusé.",
+    timeout: "Délai d'attente dépassé."
   }
 };
 
@@ -75,7 +79,6 @@ function updateUILanguage(lang) {
   document.getElementById("labelPressure").textContent = dict.pressure;
 }
 
-// Fallback generator agar API Key activate na ho
 function generateMockWeather(cityName, lang) {
   const isHindi = lang === 'hi';
   return {
@@ -109,28 +112,45 @@ async function fetchWeatherByCoords(lat, lon, lang) {
 
 async function executeFetch(url, lang, fallbackCityName) {
   const dict = translations[lang] || translations.en;
+  
+  // Disable button to prevent spam clicks
+  searchBtn.disabled = true;
   statusMessage.textContent = dict.loading;
   statusMessage.style.color = "#ffffff";
 
-  // Agar user ne API Key replace nahi ki hai:
-  if (API_KEY === "YOUR_OPENWEATHERMAP_API_KEY" || !API_KEY) {
+  if (API_KEY === "YOUR_NEW_API_KEY" || !API_KEY) {
     statusMessage.textContent = dict.invalidKey;
     statusMessage.style.color = "#ffd166";
     const mockData = generateMockWeather(fallbackCityName, lang);
     renderWeather(mockData);
     currentCity = mockData.name;
+    searchBtn.disabled = false;
     return;
   }
 
+  // Check Session Storage Cache First
+  const cachedData = sessionStorage.getItem(url);
+  if (cachedData) {
+    const data = JSON.parse(cachedData);
+    renderWeather(data);
+    currentCity = data.name;
+    statusMessage.textContent = "";
+    searchBtn.disabled = false;
+    return;
+  }
+
+  // Setup AbortController for a 5-second timeout
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
+
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeoutId);
     
-    // Status checks
     if (response.status === 401) {
       statusMessage.textContent = `${dict.invalidKey} (Error 401)`;
       statusMessage.style.color = "#ffd166";
-      const mockData = generateMockWeather(fallbackCityName, lang);
-      renderWeather(mockData);
+      renderWeather(generateMockWeather(fallbackCityName, lang));
       return;
     }
 
@@ -141,18 +161,28 @@ async function executeFetch(url, lang, fallbackCityName) {
       return;
     }
 
-    if (!response.ok) {
-      throw new Error(`HTTP Error: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
     const data = await response.json();
+    
+    // Save successful response to cache
+    sessionStorage.setItem(url, JSON.stringify(data));
+    
     renderWeather(data);
     currentCity = data.name;
     statusMessage.textContent = "";
+
   } catch (error) {
-    statusMessage.textContent = dict.notFound;
+    if (error.name === 'AbortError') {
+      statusMessage.textContent = dict.timeout;
+    } else {
+      statusMessage.textContent = dict.notFound;
+    }
     statusMessage.style.color = "#ff6b6b";
     weatherDisplay.classList.add("hidden");
+  } finally {
+    // Re-enable button regardless of success/failure
+    searchBtn.disabled = false;
   }
 }
 
@@ -172,6 +202,7 @@ function renderWeather(data) {
 }
 
 searchBtn.addEventListener("click", () => {
+  // Fixed typo: .rim() -> .trim()
   const city = cityInput.value.trim();
   if (city) {
     fetchWeatherByCity(city, langSelect.value);
@@ -195,21 +226,32 @@ langSelect.addEventListener("change", (e) => {
 geoBtn.addEventListener("click", () => {
   const lang = langSelect.value;
   const dict = translations[lang] || translations.en;
+  
   if (!navigator.geolocation) {
     statusMessage.textContent = dict.geoError;
     return;
   }
+  
   statusMessage.textContent = dict.loading;
+  
+  // Added options to prevent infinite hanging
+  const geoOptions = {
+    enableHighAccuracy: true,
+    timeout: 5000, 
+    maximumAge: 0
+  };
+
   navigator.geolocation.getCurrentPosition(
     (pos) => {
       fetchWeatherByCoords(pos.coords.latitude, pos.coords.longitude, lang);
     },
     () => {
       statusMessage.textContent = dict.geoError;
-    }
+      statusMessage.style.color = "#ff6b6b";
+    },
+    geoOptions
   );
 });
 
-// App init
 updateUILanguage("en");
 fetchWeatherByCity(currentCity, "en");
