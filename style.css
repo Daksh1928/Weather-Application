@@ -8,8 +8,7 @@
 }
 
 body {
-  /* Using a dark, stormy landscape image to mimic the reference backdrop */
-  background: url('https://images.unsplash.com/photo-1527482797697-8795b05a13fe?q=80&w=2574&auto=format&fit=crop') no-repeat center center fixed;
+  background: url('https://images.unsplash.com/photo-1601297183305-6df142704ea2?q=80&w=2574&auto=format&fit=crop') no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
   display: flex;
@@ -17,18 +16,18 @@ body {
   align-items: center;
   color: #ffffff;
   padding: 20px;
+  transition: background-image 1s ease-in-out;
 }
 
-/* Base Glassmorphism utility */
+/* Base Glassmorphism */
 .glass-panel, .glass-card, .glass-button {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
 }
 
-/* Dashboard Container */
 .dashboard {
   width: 100%;
   max-width: 1200px;
@@ -38,8 +37,7 @@ body {
   display: flex;
   overflow: hidden;
   position: relative;
-  /* Adds a subtle darkening overlay to the whole dashboard area */
-  background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.1));
+  background: linear-gradient(to right, rgba(0,0,0,0.5), rgba(0,0,0,0.2));
 }
 
 /* Left Sidebar */
@@ -54,9 +52,7 @@ body {
   z-index: 10;
 }
 
-.logo-area {
-  margin-bottom: auto;
-}
+.logo-area { margin-bottom: auto; }
 
 .sidebar-controls {
   display: flex;
@@ -78,9 +74,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.glass-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
+.glass-button:hover { background: rgba(255, 255, 255, 0.2); }
 
 select#langSelect {
   appearance: none;
@@ -93,10 +87,7 @@ select#langSelect {
   font-weight: 600;
   cursor: pointer;
 }
-select#langSelect option {
-  background: #333;
-  color: #fff;
-}
+select#langSelect option { background: #333; color: #fff; }
 
 /* Main Content Area */
 .main-content {
@@ -113,22 +104,26 @@ select#langSelect option {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .user-greeting p {
   background: rgba(255,255,255,0.15);
-  padding: 6px 16px;
+  padding: 8px 16px;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   backdrop-filter: blur(10px);
 }
 
+/* SEARCH BAR */
 .search-box {
   display: flex;
   align-items: center;
-  padding: 8px 16px;
-  border-radius: 30px;
-  width: 350px;
+  padding: 6px 6px 6px 20px;
+  border-radius: 40px;
+  width: 100%;
+  max-width: 420px;
 }
 
 .search-box input {
@@ -136,40 +131,58 @@ select#langSelect option {
   border: none;
   outline: none;
   color: white;
-  padding: 8px 12px;
+  padding: 8px 10px;
   flex: 1;
   font-size: 1rem;
 }
 
-.search-box input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
+.search-box input::placeholder { color: rgba(255, 255, 255, 0.7); }
 
-.search-box button {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
+.search-box button#searchBtn {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255,255,255,0.1);
   color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 10px 24px;
+  border-radius: 30px;
   cursor: pointer;
   transition: 0.3s;
+  font-weight: 600;
 }
 
-.search-box button:hover {
-  background: rgba(255, 255, 255, 0.3);
+.search-box button#searchBtn:hover { background: rgba(255, 255, 255, 0.4); }
+
+/* Voice Search Button */
+.mic-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  padding: 8px;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s;
+}
+
+.mic-btn:hover { color: white; }
+.mic-btn.listening { color: #ff6b6b; animation: pulse 1.2s infinite; }
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 .status-message {
   text-align: center;
   margin-bottom: 20px;
   font-size: 1.1rem;
+  min-height: 25px;
 }
+.hidden { display: none !important; }
 
-.hidden {
-  display: none !important;
-}
-
-/* Weather Display Layout */
+/* Weather Display */
 .weather-display {
   display: flex;
   gap: 40px;
@@ -185,12 +198,12 @@ select#langSelect option {
 }
 
 .huge-description {
-  font-size: 5rem;
+  font-size: 5.5rem;
   line-height: 1.1;
   font-weight: 600;
   text-transform: capitalize;
   margin-bottom: 20px;
-  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  text-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
 .forecast-graph {
@@ -214,16 +227,15 @@ select#langSelect option {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  justify-content: center;
 }
 
 .glass-card {
   border-radius: 24px;
-  padding: 24px;
+  padding: 22px 24px;
 }
 
-.main-temp-card {
-  margin-bottom: 10px;
-}
+.main-temp-card { margin-bottom: 5px; }
 
 .location-header {
   display: flex;
@@ -233,10 +245,7 @@ select#langSelect option {
   opacity: 0.9;
 }
 
-.location-header h2 {
-  font-size: 1.2rem;
-  font-weight: 400;
-}
+.location-header h2 { font-size: 1.1rem; font-weight: 400; letter-spacing: 0.5px; }
 
 .temp-wrapper {
   display: flex;
@@ -244,15 +253,19 @@ select#langSelect option {
   justify-content: space-between;
 }
 
-.temp-wrapper h1 {
-  font-size: 4rem;
-  font-weight: 300;
-}
+.temp-wrapper h1 { font-size: 4rem; font-weight: 300; }
 
 .temp-wrapper img {
-  width: 80px;
-  height: 80px;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+  width: 90px;
+  height: 90px;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+  animation: float 3s ease-in-out infinite; 
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
 }
 
 .metric-card {
@@ -263,18 +276,11 @@ select#langSelect option {
   border-radius: 18px;
 }
 
-.metric-card .label {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-}
+.metric-card .label { font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); }
+.metric-card .value { font-size: 1.1rem; font-weight: 600; }
 
-.metric-card .value {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-
-/* Responsive adjustments */
-@media (max-width: 900px) {
+/* RESPONSIVE DESIGN */
+@media (max-width: 950px) {
   .dashboard {
     flex-direction: column;
     height: auto;
@@ -289,13 +295,11 @@ select#langSelect option {
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
-  .sidebar-controls {
-    flex-direction: row;
-  }
-  .weather-display {
-    flex-direction: column;
-  }
-  .huge-description {
-    font-size: 3.5rem;
-  }
+  .logo-area { margin-bottom: 0; }
+  .sidebar-controls { flex-direction: row; }
+  
+  .weather-display { flex-direction: column; }
+  .weather-left { min-height: 250px; }
+  .huge-description { font-size: 3.5rem; margin-top: 20px; text-align: center; }
+  .search-box { width: 100%; max-width: 100%; }
 }
