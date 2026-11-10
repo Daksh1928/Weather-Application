@@ -1,181 +1,301 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
 }
 
 body {
+  /* Using a dark, stormy landscape image to mimic the reference backdrop */
+  background: url('https://images.unsplash.com/photo-1527482797697-8795b05a13fe?q=80&w=2574&auto=format&fit=crop') no-repeat center center fixed;
+  background-size: cover;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  padding: 16px;
   color: #ffffff;
+  padding: 20px;
 }
 
-.card {
+/* Base Glassmorphism utility */
+.glass-panel, .glass-card, .glass-button {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Dashboard Container */
+.dashboard {
   width: 100%;
-  max-width: 440px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  max-width: 1200px;
+  height: 80vh;
+  min-height: 700px;
+  border-radius: 30px;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  /* Adds a subtle darkening overlay to the whole dashboard area */
+  background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.1));
+}
+
+/* Left Sidebar */
+.sidebar {
+  width: 80px;
+  border-radius: 30px 0 0 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 10;
+}
+
+.logo-area {
+  margin-bottom: auto;
+}
+
+.sidebar-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.glass-button {
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+select#langSelect {
+  appearance: none;
+  border-radius: 12px;
+  width: 50px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+select#langSelect option {
+  background: #333;
+  color: #fff;
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 5;
 }
 
 .top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
-.lang-selector {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-}
-
-select {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 8px;
-  outline: none;
-  cursor: pointer;
-}
-
-select option {
-  background: #1e3c72;
-  color: #fff;
-}
-
-#geoBtn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: #fff;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
-}
-
-#geoBtn:hover {
-  transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.35);
+.user-greeting p {
+  background: rgba(255,255,255,0.15);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  backdrop-filter: blur(10px);
 }
 
 .search-box {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  align-items: center;
+  padding: 8px 16px;
+  border-radius: 30px;
+  width: 350px;
 }
 
 .search-box input {
-  flex: 1;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
-  font-size: 1rem;
+  background: transparent;
+  border: none;
   outline: none;
+  color: white;
+  padding: 8px 12px;
+  flex: 1;
+  font-size: 1rem;
 }
 
 .search-box input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .search-box button {
-  padding: 0 18px;
+  background: rgba(255, 255, 255, 0.2);
   border: none;
-  background: #ff7e5f;
   color: white;
-  border-radius: 10px;
-  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: 0.3s;
 }
 
 .search-box button:hover {
-  background: #eb6b4b;
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .status-message {
   text-align: center;
-  font-size: 0.9rem;
-  min-height: 20px;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
 }
 
+.hidden {
+  display: none !important;
+}
+
+/* Weather Display Layout */
 .weather-display {
-  text-align: center;
-  animation: fadeIn 0.4s ease;
-}
-
-.weather-display.hidden {
-  display: none;
-}
-
-.temp-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0;
+  gap: 40px;
+  flex: 1;
 }
 
-.temp-container img {
-  width: 70px;
-  height: 70px;
-}
-
-.temp-container h1 {
-  font-size: 3.2rem;
-  font-weight: 700;
-}
-
-.description {
-  text-transform: capitalize;
-  font-size: 1.15rem;
-  margin-bottom: 24px;
-  color: #e0e0e0;
-}
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.metric {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 12px;
-  border-radius: 12px;
+.weather-left {
+  flex: 2;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  justify-content: center;
+  position: relative;
 }
 
-.metric .label {
-  font-size: 0.8rem;
-  color: #cfd8dc;
+.huge-description {
+  font-size: 5rem;
+  line-height: 1.1;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 
-.metric .value {
-  font-size: 1.05rem;
+.forecast-graph {
+  margin-top: auto;
+  height: 150px;
+  width: 100%;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.wave-svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+/* Stacked Right Cards */
+.weather-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.glass-card {
+  border-radius: 24px;
+  padding: 24px;
+}
+
+.main-temp-card {
+  margin-bottom: 10px;
+}
+
+.location-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+  opacity: 0.9;
+}
+
+.location-header h2 {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.temp-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.temp-wrapper h1 {
+  font-size: 4rem;
+  font-weight: 300;
+}
+
+.temp-wrapper img {
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.metric-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-radius: 18px;
+}
+
+.metric-card .label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.metric-card .value {
+  font-size: 1.2rem;
   font-weight: 600;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .dashboard {
+    flex-direction: column;
+    height: auto;
+    border-radius: 20px;
+  }
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 15px 30px;
+    border-radius: 20px 20px 0 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .sidebar-controls {
+    flex-direction: row;
+  }
+  .weather-display {
+    flex-direction: column;
+  }
+  .huge-description {
+    font-size: 3.5rem;
+  }
 }
